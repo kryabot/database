@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - preConditions:
+      onFail: HALT
+      onError: HALT
+
+  # Initial schema including
+  - include:
+      file: changelog/table-twitch-timeout.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: changelog/table-twitch-message.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: changelog/table-bot-task.yaml
+      relativeToChangelogFile: true

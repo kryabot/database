@@ -1,0 +1,79 @@
+databaseChangeLog:
+  - preConditions:
+      onFail: HALT
+      onError: HALT
+  - changeSet:
+      id: create-twitch-message-table
+      author: Oskaras
+      changes:
+        - createTable:
+            remarks:   Message information
+            tableName: twitch_message
+            columns:
+              - column:
+                  remarks: Unique id
+                  name: twitch_message_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  remarks: ID of twitch message
+                  name: message_id
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  remarks: ID of channel
+                  name: channel_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  remarks: ID of user
+                  name:    user_id
+                  type:    BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: text
+                  type: nvarchar
+                  defaultValue: ""
+                  remarks: Reason of timeout
+              - column:
+                  name: sent_at
+                  type: TIMESTAMP
+                  remarks: Until when timeout is active
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+        - createIndex:
+            clustered:  true
+            columns:
+              - column:
+                  descending:  true
+                  name:  channel_id
+              - column:
+                  descending:  true
+                  name:  user_id
+            indexName:  idx_twitch_message_random_search
+            tableName:  twitch_message
+            unique:  false
+        - createIndex:
+            clustered:  true
+            columns:
+              - column:
+                  descending:  true
+                  name:  channel_id
+              - column:
+                  descending:  true
+                  name:  user_id
+              - column:
+                  descending:  true
+                  name:  message_id
+            indexName:  idx_twitch_message_unique
+            tableName:  twitch_message
+            unique:  true

@@ -1,0 +1,83 @@
+databaseChangeLog:
+  - preConditions:
+      onFail: HALT
+      onError: HALT
+  - changeSet:
+      id: create-bot-task-table
+      author: Oskaras
+      changes:
+        - createTable:
+            remarks:  Persistence for bot tasks
+            tableName: bot_task
+            columns:
+              - column:
+                  remarks: Unique id
+                  name: bot_task_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  remarks: Task type
+                  name: task_type
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  remarks: Status of task
+                  name: task_status
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: started_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: true
+              - column:
+                  name: finished_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  remarks: Retry count
+                  name: retries
+                  type: INT
+                  defaultValue: 0
+              - column:
+                  name: request
+                  type: JSONB
+              - column:
+                  name: response
+                  type: JSONB
+        - createIndex:
+            clustered:  true
+            columns:
+              - column:
+                  descending:  true
+                  name:  bot_task_id
+            indexName:  idx_bot_task_id
+            tableName:  bot_task
+            unique:  false
+        - createIndex:
+            clustered:  true
+            columns:
+              - column:
+                  descending:  true
+                  name:  task_type
+            indexName:  idx_bot_task_by_type
+            tableName:  bot_task
+            unique:  false
+        - createIndex:
+            clustered:  true
+            columns:
+              - column:
+                  descending:  true
+                  name:  task_status
+            indexName:  idx_bot_task_by_status
+            tableName:  bot_task
+            unique:  false
